@@ -3,9 +3,16 @@ import { useReactToPrint } from 'react-to-print';
 import { exportToPDF, exportToPNG, exportToExcel, exportToCSV } from '../utils/exporter';
 import { Download, FileText, Image as ImageIcon, Printer, ChevronUp, Sheet, Table } from 'lucide-react';
 
-export default function ExportControls({ isReady, previewRef, missingFields, filename, fullData }) {
+export default function ExportControls({ 
+  isReady, 
+  previewRef, 
+  missingFields, 
+  filename, 
+  fullData,
+  showValidationErrors,
+  setShowValidationErrors
+}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [showError, setShowError] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -20,9 +27,9 @@ export default function ExportControls({ isReady, previewRef, missingFields, fil
 
   useEffect(() => {
     if (isReady) {
-      setShowError(false);
+      setShowValidationErrors(false);
     }
-  }, [isReady]);
+  }, [isReady, setShowValidationErrors]);
 
   const triggerPrint = useReactToPrint({
     contentRef: previewRef,
@@ -84,7 +91,7 @@ export default function ExportControls({ isReady, previewRef, missingFields, fil
 
   return (
     <div className="mt-6 flex flex-col gap-3 relative" ref={dropdownRef}>
-      {showError && !isReady && (
+      {showValidationErrors && !isReady && (
         <div className="text-xs text-red-500 bg-red-50 p-3 rounded-md border border-red-100">
           <strong>Missing required fields:</strong> {missingFields.join(', ')}
         </div>
@@ -93,7 +100,7 @@ export default function ExportControls({ isReady, previewRef, missingFields, fil
         <button
           onClick={() => {
             if (!isReady) {
-              setShowError(true);
+              setShowValidationErrors(true);
             } else {
               triggerPrint();
             }
@@ -107,7 +114,7 @@ export default function ExportControls({ isReady, previewRef, missingFields, fil
           <button
             onClick={() => {
               if (!isReady) {
-                setShowError(true);
+                setShowValidationErrors(true);
               } else {
                 handleToggleOpen();
               }

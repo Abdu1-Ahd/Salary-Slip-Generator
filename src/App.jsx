@@ -15,7 +15,7 @@ import { getExactDaysInMonth, getExactWorkingDays, getEffectiveProratedDays } fr
 import defaultLogo from './assets/logo.jpg';
 
 function SalarySlipGenerator() {
-  const [hasInteracted, setHasInteracted] = useState(false);
+  const [showValidationErrors, setShowValidationErrors] = useState(false);
 
   const [employeeInfo, setEmployeeInfo] = useState({
     name: '', employeeId: '', designation: '', department: '', dateOfJoining: ''
@@ -146,11 +146,7 @@ function SalarySlipGenerator() {
   const totalPercent = Object.values(percents).reduce((a, b) => a + Number(b), 0);
 
   // Track interaction
-  useEffect(() => {
-    if (employeeInfo.name || employeeInfo.employeeId || activeGross > 0) {
-      setHasInteracted(true);
-    }
-  }, [employeeInfo, activeGross]);
+  // Remove the old hasInteracted side effect
 
   // Validation
   const missingFields = useMemo(() => {
@@ -182,14 +178,14 @@ function SalarySlipGenerator() {
       <main className="flex-1 max-w-[80rem] mx-auto w-full px-[clamp(1rem,3vw,2rem)] py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-[clamp(1.5rem,3vw,2rem)] items-start">
           {/* Form Side */}
-          <div className="flex flex-col min-w-0" onBlur={() => setHasInteracted(true)}>
-            <EmployeeInfoSection data={employeeInfo} onChange={setEmployeeInfo} showError={hasInteracted && !isReady} />
-            <PayPeriodSection data={fullPayPeriod} onChange={setPayPeriod} showError={hasInteracted && !isReady} />
-            <EarningsSection data={fullEarnings} onChange={setEarningsInput} percents={percents} setPercents={setPercents} showError={hasInteracted && !isReady} />
+          <div className="flex flex-col min-w-0">
+            <EmployeeInfoSection data={employeeInfo} onChange={setEmployeeInfo} showError={showValidationErrors && !isReady} />
+            <PayPeriodSection data={fullPayPeriod} onChange={setPayPeriod} showError={showValidationErrors && !isReady} />
+            <EarningsSection data={fullEarnings} onChange={setEarningsInput} percents={percents} setPercents={setPercents} showError={showValidationErrors && !isReady} />
             <DeductionsSection data={deductions} onChange={setDeductions} />
-            <CompanyInfoSection data={companyInfo} onChange={setCompanyInfo} showError={hasInteracted && !isReady} />
-            <VerificationSection verificationInfo={verificationInfo} onChange={setVerificationInfo} showError={hasInteracted && !isReady} />
-            <SignatureSection signatureInfo={signatureInfo} onChange={setSignatureInfo} showError={hasInteracted && !isReady} />
+            <CompanyInfoSection data={companyInfo} onChange={setCompanyInfo} showError={showValidationErrors && !isReady} />
+            <VerificationSection verificationInfo={verificationInfo} onChange={setVerificationInfo} showError={showValidationErrors && !isReady} />
+            <SignatureSection signatureInfo={signatureInfo} onChange={setSignatureInfo} showError={showValidationErrors && !isReady} />
           </div>
 
           {/* Preview Side */}
@@ -230,6 +226,8 @@ function SalarySlipGenerator() {
               missingFields={missingFields} 
               filename={filename} 
               fullData={{ employeeInfo, payPeriod: fullPayPeriod, earnings: proratedEarnings, deductions, companyInfo }}
+              showValidationErrors={showValidationErrors}
+              setShowValidationErrors={setShowValidationErrors}
             />
           </div>
         </div>
