@@ -46,7 +46,7 @@ export default function PayPeriodSection({ data, onChange, showError }) {
         <div className="flex flex-col gap-1.5">
           <label htmlFor="totalDays" className="text-sm font-medium text-slate-700">Total Days</label>
           <input
-            type="number"
+            type="number" onWheel={(e) => e.target.blur()}
             id="totalDays"
             value={data.totalDays}
             readOnly
@@ -57,7 +57,7 @@ export default function PayPeriodSection({ data, onChange, showError }) {
         <div className="flex flex-col gap-1.5">
           <label htmlFor="workingDays" className="text-sm font-medium text-slate-700">Working Days</label>
           <input
-            type="number"
+            type="number" onWheel={(e) => e.target.blur()}
             id="workingDays"
             value={data.workingDays}
             readOnly
@@ -68,7 +68,7 @@ export default function PayPeriodSection({ data, onChange, showError }) {
         <div className="flex flex-col gap-1.5">
           <label htmlFor="holidays" className="text-sm font-medium text-slate-700">Holidays</label>
           <input
-            type="number"
+            type="number" onWheel={(e) => e.target.blur()}
             id="holidays"
             name="holidays"
             value={data.holidays === '' ? '' : (data.holidays || '')}
@@ -82,7 +82,7 @@ export default function PayPeriodSection({ data, onChange, showError }) {
         <div className="flex flex-col gap-1.5">
           <label htmlFor="leavesTaken" className="text-sm font-medium text-slate-700">Leaves Taken <span className="text-red-500">*</span></label>
           <input
-            type="number"
+            type="number" onWheel={(e) => e.target.blur()}
             id="leavesTaken"
             name="leavesTaken"
             value={data.leavesTaken === '' ? '' : (data.leavesTaken || '')}
@@ -97,7 +97,7 @@ export default function PayPeriodSection({ data, onChange, showError }) {
         <div className="flex flex-col gap-1.5">
           <label htmlFor="paidDays" className="text-sm font-medium text-slate-700">Paid Days</label>
           <input
-            type="number"
+            type="number" onWheel={(e) => e.target.blur()}
             id="paidDays"
             name="paidDays"
             value={data.paidDays === '' ? '' : (data.paidDays || '')}

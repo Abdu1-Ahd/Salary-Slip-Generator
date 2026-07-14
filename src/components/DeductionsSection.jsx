@@ -30,7 +30,7 @@ export default function DeductionsSection({ data, onChange }) {
             <div className="relative w-full sm:max-w-xs">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none">PKR</span>
               <input
-                type="number"
+                type="number" onWheel={(e) => e.target.blur()}
                 id={field.name}
                 name={field.name}
                 value={data[field.name] || ''}

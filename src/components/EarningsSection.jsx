@@ -39,7 +39,7 @@ export default function EarningsSection({ data, onChange, percents, setPercents,
         {percentKey && (
           <div className="relative w-20">
             <input
-              type="number"
+              type="number" onWheel={(e) => e.target.blur()}
               value={percents[percentKey]}
               onChange={(e) => handlePercentChange(e, percentKey)}
               className="w-full px-2 py-1.5 border border-slate-200 text-center rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-accent/50 text-sm no-spinners"
@@ -51,7 +51,7 @@ export default function EarningsSection({ data, onChange, percents, setPercents,
         <div className="relative w-[12rem]">
           <span className={`absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${isEditable ? 'text-slate-500' : 'text-slate-400'}`}>PKR</span>
           <input
-            type="number"
+            type="number" onWheel={(e) => e.target.blur()}
             id={name}
             name={name}
             value={data[name] || (isEditable ? '' : 0)}
@@ -83,7 +83,7 @@ export default function EarningsSection({ data, onChange, percents, setPercents,
             <div className="relative w-[12rem]">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none">PKR</span>
               <input
-                type="number"
+                type="number" onWheel={(e) => e.target.blur()}
                 id="grossSalary"
                 name="grossSalary"
                 value={data.grossSalary || ''}
@@ -109,7 +109,7 @@ export default function EarningsSection({ data, onChange, percents, setPercents,
             <div className="relative w-[12rem]">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none">PKR</span>
               <input
-                type="number"
+                type="number" onWheel={(e) => e.target.blur()}
                 id="bonus"
                 name="bonus"
                 value={data.bonus || ''}

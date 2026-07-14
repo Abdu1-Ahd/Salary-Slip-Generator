@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { exportToPDF, exportToPNG, exportToExcel, exportToCSV } from '../utils/exporter';
-import { Download, FileText, Image as ImageIcon, Printer, ChevronDown, Sheet, Table } from 'lucide-react';
+import { Download, FileText, Image as ImageIcon, Printer, ChevronUp, Sheet, Table } from 'lucide-react';
 
 export default function ExportControls({ isReady, previewRef, missingFields, filename, fullData }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -99,7 +99,7 @@ export default function ExportControls({ isReady, previewRef, missingFields, fil
           >
             <Download className="w-4 h-4" />
             Download Options
-            <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+            <ChevronUp className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
           </button>
 
           {isOpen && isReady && (
