@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --color-accent: #3b82f6; /* Blue-500 as accent */
+  --color-accent-hover: #2563eb; /* Blue-600 */
+}
+
+body {
+  background-color: #f8fafc; /* Slate-50 */
+  color: #0f172a; /* Slate-900 */
+  font-family: var(--font-sans);
+}
+
+/* Remove spinners from number inputs */
+.no-spinners::-webkit-inner-spin-button, 
+.no-spinners::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+.no-spinners {
+  -moz-appearance: textfield;
+}
