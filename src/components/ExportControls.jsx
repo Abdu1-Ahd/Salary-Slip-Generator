@@ -5,6 +5,7 @@ import { Download, FileText, Image as ImageIcon, Printer, ChevronUp, Sheet, Tabl
 
 export default function ExportControls({ isReady, previewRef, missingFields, filename, fullData }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [showError, setShowError] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -16,6 +17,12 @@ export default function ExportControls({ isReady, previewRef, missingFields, fil
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (isReady) {
+      setShowError(false);
+    }
+  }, [isReady]);
 
   const triggerPrint = useReactToPrint({
     contentRef: previewRef,
@@ -77,25 +84,35 @@ export default function ExportControls({ isReady, previewRef, missingFields, fil
 
   return (
     <div className="mt-6 flex flex-col gap-3 relative" ref={dropdownRef}>
-      {!isReady && (
+      {showError && !isReady && (
         <div className="text-xs text-red-500 bg-red-50 p-3 rounded-md border border-red-100">
           <strong>Missing required fields:</strong> {missingFields.join(', ')}
         </div>
       )}
       <div className="flex flex-col sm:flex-row gap-3 w-full">
         <button
-          onClick={triggerPrint}
-          disabled={!isReady}
-          className="flex-1 px-4 py-3 bg-accent text-white text-sm font-semibold rounded-md hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+          onClick={() => {
+            if (!isReady) {
+              setShowError(true);
+            } else {
+              triggerPrint();
+            }
+          }}
+          className="flex-1 px-4 py-3 bg-accent text-white text-sm font-semibold rounded-md hover:bg-accent-hover transition-colors flex items-center justify-center gap-2"
         >
           <Printer className="w-4 h-4" />
           Print Slip
         </button>
         <div className="flex-1 relative">
           <button
-            onClick={handleToggleOpen}
-            disabled={!isReady}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-slate-800 text-white text-sm font-semibold rounded-md hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            onClick={() => {
+              if (!isReady) {
+                setShowError(true);
+              } else {
+                handleToggleOpen();
+              }
+            }}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-slate-800 text-white text-sm font-semibold rounded-md hover:bg-slate-700 transition-colors"
           >
             <Download className="w-4 h-4" />
             Download Options
