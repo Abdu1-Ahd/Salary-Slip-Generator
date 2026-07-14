@@ -1,6 +1,4 @@
-import { toPng } from 'html-to-image';
-import { jsPDF } from 'jspdf';
-import * as XLSX from 'xlsx';
+
 import { calculateGross, getTotalDeductions, getNetSalary } from './calculations';
 
 
@@ -18,6 +16,7 @@ export async function exportToPNG(element, filename) {
   }
 
   try {
+    const { toPng } = await import('html-to-image');
     const dataUrl = await toPng(element, { 
       quality: 1, 
       pixelRatio: 2,
@@ -54,6 +53,9 @@ export async function exportToPDF(element, filename) {
   }
 
   try {
+    const { toPng } = await import('html-to-image');
+    const { jsPDF } = await import('jspdf');
+
     const dataUrl = await toPng(element, { 
       quality: 1, 
       pixelRatio: 2,
@@ -140,6 +142,7 @@ function prepareSpreadsheetData(data) {
 }
 
 export async function exportToExcel(data, filename) {
+  const XLSX = await import('xlsx');
   const rows = prepareSpreadsheetData(data);
   const worksheet = XLSX.utils.aoa_to_sheet(rows);
   const workbook = XLSX.utils.book_new();
@@ -148,6 +151,7 @@ export async function exportToExcel(data, filename) {
 }
 
 export async function exportToCSV(data, filename) {
+  const XLSX = await import('xlsx');
   const rows = prepareSpreadsheetData(data);
   const worksheet = XLSX.utils.aoa_to_sheet(rows);
   const csv = XLSX.utils.sheet_to_csv(worksheet);
