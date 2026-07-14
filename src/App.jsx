@@ -62,8 +62,33 @@ function SalarySlipGenerator() {
     enabled: false, image: null, name: '', designation: ''
   });
 
-
   const previewRef = useRef(null);
+  const previewWrapperRef = useRef(null);
+  const [scale, setScale] = useState(1);
+  const [previewHeight, setPreviewHeight] = useState(0);
+
+  useEffect(() => {
+    if (!previewWrapperRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const width = entry.contentRect.width;
+        setScale(width < 800 ? width / 800 : 1);
+      }
+    });
+    observer.observe(previewWrapperRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!previewRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        setPreviewHeight(entry.contentRect.height);
+      }
+    });
+    observer.observe(previewRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   // Pay Period Derived Calculations
   const actualTotalDaysInMonth = getTotalDaysInMonth(payPeriod.month, payPeriod.year);
@@ -156,7 +181,7 @@ function SalarySlipGenerator() {
       <main className="flex-1 max-w-[80rem] mx-auto w-full px-[clamp(1rem,3vw,2rem)] py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-[clamp(1.5rem,3vw,2rem)] items-start">
           {/* Form Side */}
-          <div className="flex flex-col" onBlur={() => setHasInteracted(true)}>
+          <div className="flex flex-col min-w-0" onBlur={() => setHasInteracted(true)}>
             <EmployeeInfoSection data={employeeInfo} onChange={setEmployeeInfo} showError={hasInteracted && !isReady} />
             <PayPeriodSection data={fullPayPeriod} onChange={setPayPeriod} showError={hasInteracted && !isReady} />
             <EarningsSection data={fullEarnings} onChange={setEarningsInput} percents={percents} setPercents={setPercents} showError={hasInteracted && !isReady} />
@@ -167,21 +192,34 @@ function SalarySlipGenerator() {
           </div>
 
           {/* Preview Side */}
-          <div className="sticky top-24 flex flex-col">
+          <div className="sticky top-24 flex flex-col min-w-0">
             <div className="border border-slate-200 rounded-lg overflow-hidden bg-white shadow-sm">
-              <div className="overflow-x-auto bg-slate-100 p-4 sm:p-8 flex justify-center items-start">
-                 {/* Provide scaling container to fit large slip on smaller screens visually, but exporting original */}
-                <div id="slip-preview-container" className="transform origin-top lg:scale-100 sm:scale-90 scale-75 w-full flex justify-center">
-                  <SlipPreview 
-                    ref={previewRef}
-                    employeeInfo={employeeInfo}
-                    payPeriod={fullPayPeriod}
-                    earnings={proratedEarnings}
-                    deductions={deductions}
-                    companyInfo={companyInfo}
-                    verificationInfo={verificationInfo}
-                    signatureInfo={signatureInfo}
-                  />
+              <div 
+                ref={previewWrapperRef} 
+                className="bg-slate-100 p-4 sm:p-8 flex justify-center items-start overflow-hidden"
+              >
+                <div 
+                  style={{ 
+                    width: `${800 * scale}px`, 
+                    height: previewHeight ? `${previewHeight * scale}px` : 'auto',
+                    position: 'relative'
+                  }}
+                >
+                  <div 
+                    className="absolute top-0 left-0 origin-top-left"
+                    style={{ transform: `scale(${scale})` }}
+                  >
+                    <SlipPreview 
+                      ref={previewRef}
+                      employeeInfo={employeeInfo}
+                      payPeriod={fullPayPeriod}
+                      earnings={proratedEarnings}
+                      deductions={deductions}
+                      companyInfo={companyInfo}
+                      verificationInfo={verificationInfo}
+                      signatureInfo={signatureInfo}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
