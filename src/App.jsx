@@ -10,7 +10,8 @@ import VerificationSection from './components/VerificationSection';
 import SignatureSection from './components/SignatureSection';
 import SlipPreview from './components/SlipPreview';
 import ExportControls from './components/ExportControls';
-import { getTotalDaysInMonth, calculateWorkingDays, calculateEffectiveDays, calculatePaidDays, calculateSalaryBreakdown, calculateGross } from './utils/calculations';
+import { calculatePaidDays, calculateSalaryBreakdown, calculateGross, getTotalDeductions, getNetSalary } from './utils/calculations';
+import { getExactDaysInMonth, getExactWorkingDays, getEffectiveProratedDays } from './utils/calendarUtils';
 import defaultLogo from './assets/logo.jpg';
 
 function SalarySlipGenerator() {
@@ -91,11 +92,11 @@ function SalarySlipGenerator() {
   }, []);
 
   // Pay Period Derived Calculations
-  const actualTotalDaysInMonth = getTotalDaysInMonth(payPeriod.month, payPeriod.year);
-  const effectiveDays = calculateEffectiveDays(payPeriod.month, payPeriod.year, employeeInfo.dateOfJoining, payPeriod.holidays);
+  const actualTotalDaysInMonth = getExactDaysInMonth(payPeriod.month, payPeriod.year);
+  const effectiveDays = getEffectiveProratedDays(payPeriod.month, payPeriod.year, employeeInfo.dateOfJoining, payPeriod.holidays);
 
   const totalDays = effectiveDays ? effectiveDays.totalDays : actualTotalDaysInMonth;
-  const workingDays = effectiveDays ? effectiveDays.workingDays : calculateWorkingDays(payPeriod.month, payPeriod.year, payPeriod.holidays);
+  const workingDays = effectiveDays ? effectiveDays.workingDays : getExactWorkingDays(payPeriod.month, payPeriod.year, payPeriod.holidays);
   
   let activeLeaves = Number(payPeriod.leavesTaken) || 0;
   let activePaid = Number(payPeriod.paidDays) || 0;
